@@ -218,7 +218,9 @@ def clear_namespace_if_requested(index, config: RagConfig) -> None:
         print(f"[PINECONE] Namespace clear warning: {exc}")
 
 
-def build_pinecone_vector_store(index, embeddings: OpenAIEmbeddings) -> PineconeVectorStore:
+def build_pinecone_vector_store(
+    index, embeddings: OpenAIEmbeddings
+) -> PineconeVectorStore:
     return PineconeVectorStore(index=index, embedding=embeddings)
 
 
@@ -228,7 +230,9 @@ def index_documents(
     ids: List[str],
     config: RagConfig,
 ) -> None:
-    print(f"[PINECONE] Upserting {len(chunks)} chunks into namespace: {config.namespace}")
+    print(
+        f"[PINECONE] Upserting {len(chunks)} chunks into namespace: {config.namespace}"
+    )
     vector_store.add_documents(
         documents=chunks,
         ids=ids,
@@ -236,7 +240,9 @@ def index_documents(
     )
 
 
-def demo_similarity_search(vector_store: PineconeVectorStore, config: RagConfig) -> None:
+def demo_similarity_search(
+    vector_store: PineconeVectorStore, config: RagConfig
+) -> None:
     print(f"\n[QUERY] {config.demo_query}")
     results = vector_store.similarity_search(
         config.demo_query,
@@ -253,7 +259,9 @@ def demo_similarity_search(vector_store: PineconeVectorStore, config: RagConfig)
 
 
 def run(config: RagConfig) -> None:
-    print("\n=== RAG Indexing Pipeline: Web → Clean → Chunk → OpenAI Embeddings → Pinecone ===")
+    print(
+        "\n=== RAG Indexing Pipeline: Web → Clean → Chunk → OpenAI Embeddings → Pinecone ==="
+    )
     print(f"Source URL:      {config.url}")
     print(f"Pinecone index:  {config.index_name}")
     print(f"Namespace:       {config.namespace}")
@@ -277,7 +285,9 @@ def run(config: RagConfig) -> None:
 
     chunks = split_into_chunks(cleaned_docs, config)
     if not chunks:
-        raise RuntimeError("No chunks were created. Check the source content and splitter settings.")
+        raise RuntimeError(
+            "No chunks were created. Check the source content and splitter settings."
+        )
 
     print(f"\n[SPLITTER] Chunks created: {len(chunks)}")
     preview("CHUNK", chunks, config.preview_count, config.preview_chars)
