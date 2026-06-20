@@ -1,0 +1,31 @@
+flowchart TD
+    A["Source URL<br/>Wikipedia / HTML page"] --> B["Load page<br/>LangChain WebBaseLoader"]
+
+    B --> C["Clean HTML<br/>BeautifulSoupTransformer"]
+    C --> D["Light text cleanup<br/>remove empty lines / normalize spacing"]
+
+    D --> E["Chunk documents<br/>RecursiveCharacterTextSplitter"]
+
+    E --> F["Create embeddings<br/>OpenAI text-embedding-3-small"]
+
+    F --> G["Create or connect to Pinecone index"]
+    G --> H["Upsert chunks into Pinecone namespace"]
+
+    H --> I["Similarity search"]
+    I --> J["Return relevant chunks<br/>for RAG / retrieval"]
+
+    subgraph "RAG Indexing Pipeline"
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+    end
+
+    subgraph "Vector Database"
+        G
+        H
+        I
+    end
