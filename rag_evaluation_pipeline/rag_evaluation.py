@@ -25,7 +25,6 @@ from ragas.metrics import (
     FactualCorrectness,
 )
 
-
 # --- CONFIG ---
 URL = "https://en.wikipedia.org/wiki/2023_Cricket_World_Cup"
 
@@ -35,9 +34,6 @@ CHUNK_OVERLAP = 100
 TEST_SIZE = 5
 RETRIEVAL_K = 4
 
-LLM_MODEL = "gpt-4o-mini"
-EMBED_MODEL = "text-embedding-3-small"
-EMBED_DIMENSION = 1536
 
 INDEX_NAME = "cwc-index"
 NAMESPACE = "evaluation"
@@ -50,15 +46,6 @@ DELETE_EXISTING_NAMESPACE = True
 
 # --- LOAD ENV ---
 load_dotenv()
-
-pinecone_api_key = os.getenv("PINECONE_API_KEY")
-openai_api_key = os.getenv("OPENAI_API_KEY")
-
-if not pinecone_api_key:
-    raise ValueError("Missing PINECONE_API_KEY in .env")
-
-if not openai_api_key:
-    raise ValueError("Missing OPENAI_API_KEY in .env")
 
 
 # --- HELPERS ---
@@ -105,7 +92,7 @@ def generate_answer(llm, question, contexts):
 
 # --- PINECONE SETUP ---
 print("Connecting to Pinecone...")
-pc = Pinecone(api_key=pinecone_api_key)
+pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
 print("Checking Pinecone index...")
 if not pc.has_index(INDEX_NAME):
@@ -113,7 +100,7 @@ if not pc.has_index(INDEX_NAME):
 
     pc.create_index(
         name=INDEX_NAME,
-        dimension=EMBED_DIMENSION,
+        dimension=1536,
         metric="cosine",
         spec=ServerlessSpec(
             cloud=PINECONE_CLOUD,
@@ -146,8 +133,8 @@ chunks = splitter.split_documents(documents)
 
 # --- MODELS ---
 print("Creating LLM and embeddings...")
-llm = ChatOpenAI(model=LLM_MODEL)
-embeddings = OpenAIEmbeddings(model=EMBED_MODEL)
+llm = ChatOpenAI(model="gpt-4o-mini")
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 evaluator_llm = LangchainLLMWrapper(llm)
 evaluator_embeddings = LangchainEmbeddingsWrapper(embeddings)
