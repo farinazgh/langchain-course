@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "black>=26.3.1",
+    "certifi>=2026.2.25",
     "isort>=8.0.1",
     "langchain>=1.2.15",
     "langchain-classic>=1.0.8",
@@ -15,6 +16,8 @@ dependencies = [
     "langchain-pinecone>=0.2.13",
     "langchain-tavily>=0.2.18",
     "langchainhub>=0.1.21",
+    "logger>=1.4",
     "openai-agents>=0.16.0",
+    "pinecone>=7.3.0",
     "python-dotenv>=1.2.2",
 ]
